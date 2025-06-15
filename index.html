@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Embed Generator</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 800px;
+      margin: 2em auto;
+      padding: 1em;
+    }
+    textarea {
+      width: 100%;
+      height: 200px;
+      font-family: monospace;
+      font-size: 14px;
+      margin-bottom: 1em;
+    }
+    button {
+      padding: 0.5em 1em;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Embed Code Generator</h1>
+  <p>Use this tool to generate a custom embed snippet and proceed to publish.</p>
+  <textarea id="codeBox" readonly></textarea>
+  <br>
+  <button id="copyAndProceed">Copy and Proceed to Publish</button>
+
+  <script>
+    // Get query string parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const dataId = urlParams.get('dataId');
+    const publishURL = urlParams.get('publishURL');
+
+    // Template
+    const embedHTML = `
+<div class="lesson-player" data-id="${dataId}">
+  <iframe width="100%" height="500" class="custom-player" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+</div>
+<div>Click <a href="/using-the-interactive-player" target="_blank" rel="noopener noreferrer">here</a> for Interactive Player info and best practices.</div>
+`.trim();
+
+    // Set text area value
+    const codeBox = document.getElementById('codeBox');
+    codeBox.value = embedHTML;
+
+    // Copy and redirect
+    document.getElementById('copyAndProceed').addEventListener('click', function () {
+      navigator.clipboard.writeText(embedHTML).then(() => {
+        if (publishURL) {
+          window.location.href = publishURL;
+        } else {
+          alert('No publishURL provided.');
+        }
+      }).catch(err => {
+        alert('Failed to copy to clipboard.');
+      });
+    });
+  </script>
+</body>
+</html>
