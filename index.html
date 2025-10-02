@@ -31,19 +31,20 @@
 <body>
   <h1>Embed Code Generator</h1>
   <p>Use this tool to generate a custom embed snippet and proceed to publish.</p>
+
   <h2>Embed HTML</h2>
   <textarea id="codeBox" readonly></textarea>
   <button id="copyAndProceed">Copy Embed Code and Proceed to Publish</button>
+
   <h2>Script JS (for reference)</h2>
   <textarea id="scriptBox" readonly></textarea>
-  <h2>Full Embed Code (Alternative)</h2>
-  <textarea id="fullBox" readonly></textarea>
-  <p>If you cannot add the script separately (e.g., in a platform that doesn't allow global scripts), copy and paste this full embed code directly into the HTML of the page where you want the interactive player to appear. It includes both the embed HTML and the necessary script in one snippet. For best practices, refer to the <a href="/using-the-interactive-player" target="_blank" rel="noopener noreferrer">Interactive Player info</a>.</p>
+
   <script>
     // Get query string parameters
     const urlParams = new URLSearchParams(window.location.search);
     const dataId = urlParams.get('dataId');
     const publishURL = urlParams.get('publishURL');
+
     // Embed HTML Template
     const embedHTML = `
 <div class="lesson-player" data-id="${dataId}">
@@ -51,14 +52,17 @@
 </div>
 <div>Click <a href="/using-the-interactive-player" target="_blank" rel="noopener noreferrer">here</a> for Interactive Player info and best practices.</div>
 `.trim();
+
     // Script Template
     const scriptJS = `
 document.addEventListener("DOMContentLoaded", function () {
   const userId = window.Kajabi?.currentSiteUser?.id;
   const containers = document.querySelectorAll(".lesson-player");
+
   containers.forEach((container) => {
     const sliceId = container.dataset.id;
     const iframe = container.querySelector("iframe.custom-player");
+
     if (userId && sliceId && iframe) {
       iframe.src = \`https://www.soundslice.com/slices/\${sliceId}/embed/?u=\${userId}\`;
     } else {
@@ -66,18 +70,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });`.trim();
-    // Full Embed Template
-    const fullEmbed = `
-${embedHTML}
 
-<script>
-${scriptJS}
-</script>
-`.trim();
     // Set text areas
     document.getElementById('codeBox').value = embedHTML;
     document.getElementById('scriptBox').value = scriptJS;
-    document.getElementById('fullBox').value = fullEmbed;
+
     // Copy and redirect
     document.getElementById('copyAndProceed').addEventListener('click', function () {
       navigator.clipboard.writeText(embedHTML).then(() => {
